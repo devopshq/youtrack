@@ -10,7 +10,7 @@ setup(
     name='dohq-youtrack',
     version=__version__,
     license='MIT License',
-    description='A Python to YouTrack interface',
+    description='YouTrack Python 3 Client Library',
     long_description=long_description,
     author='Alexander Kovalev',
     author_email='ak@alkov.pro',
