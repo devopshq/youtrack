@@ -9,7 +9,6 @@ install:
 - pip install -r requirements.txt
 script:
 - printenv
-- ./scripts/build-on-server.sh
 before_deploy:
 - ls -l build/
 deploy:
