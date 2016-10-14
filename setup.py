@@ -7,7 +7,7 @@ with open('README.rst') as readme:
     long_description = readme.read()
 
 setup(
-    name='dohq_youtrack',
+    name='dohq-youtrack',
     version=__version__,
     license='MIT License',
     description='A Python to YouTrack interface',
