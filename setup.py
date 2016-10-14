@@ -43,9 +43,9 @@ setup(
         # 'pytest-runner',
         'wheel',
     ],
-    tests_require=[
+    # tests_require=[
         # 'pytest',
-    ],
+    # ],
     zip_safe=False,
     package_data={
         '': [

@@ -7,6 +7,8 @@ branches:
   - develop
 install:
 - pip install -r requirements.txt
+script:
+- printenv
 deploy:
   provider: pypi
   user: alkov.pro
