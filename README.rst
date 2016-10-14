@@ -8,4 +8,4 @@ YouTrack
 .. image:: https://img.shields.io/pypi/l/dohq_youtrack.svg
     :target: https://pypi.python.org/pypi/dohq_youtrack
 
-YouTrack automation
+YouTrack adapter for python 3
