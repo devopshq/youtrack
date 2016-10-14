@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 from setuptools import setup
+from youtrack import __version__
 
 with open('README.rst') as readme:
     long_description = readme.read()
 
 setup(
     name='dohq_youtrack',
-    version='0.0.2',
+    version=__version__,
     license='MIT License',
     description='A Python to YouTrack interface',
     long_description=long_description,
