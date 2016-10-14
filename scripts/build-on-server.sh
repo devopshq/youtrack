@@ -2,7 +2,6 @@
 
 set -e -v -x
 
-
 DEVOPS_CHECKOUT_DIR="$(dirname "$(dirname "$(readlink --canonicalize --no-newline "${BASH_SOURCE:-$0}")")")"
 cd "$DEVOPS_CHECKOUT_DIR"
 
@@ -45,7 +44,7 @@ if bool "$DEVOPS_BUILD_DEVELOP"; then
 
     echo "INFO:  ======== __version__ changed from '$DEVOPS_BUILD_VERSION_FROM_FILE' to '$DEVOPS_BUILD_VERSION'"
 
-    sed -i "s/Development\ Status\ ::\ 5\ -\ Production\/Stable/Development\ Status\ ::\ 4\ -\ Beta/g" ./setup.py
+    # sed -i "s/Development\ Status\ ::\ 5\ -\ Production\/Stable/Development\ Status\ ::\ 4\ -\ Beta/g" ./setup.py
 
 fi
 
