@@ -1,2 +1,0 @@
-# youtrack
-YouTrack automation

@@ -1,0 +1,18 @@
+language: python
+python:
+- '3.5'
+branches:
+  only:
+  - master
+  - develop
+install:
+- pip install -r requirements.txt
+deploy:
+  provider: pypi
+  user: alkov.pro
+  password:
+    secure: Z9MxxwwY9ZtJBDKr+gwwNFQEZxOjqUo0oVLN9k9gN26uH+Ntgpd5u3VuckJB7vnrHjpi4BnhrGprHFzUMLCjTdX+R/sXtIIUP3FV9UFMFSpkXiCJ0zkUDlb5pwX2FAt8oOAmZM1Qa+rNOCB+ui/Xb3nUBcwngiL8nE/CoBUiDOGt13W/n/vUvB5Omlvo1bUww+DFoaVn6oOohv2OSRCgziO+WCHAnSo+vYFTE5TFMzvXafVcLFcOs+m/nLCtwzJU1m2E+V+NTXkuitrJRZVTNuuEJJZg5q07Fwa3eA8GBqnAG33I4Qxxc65PLb9W5RWqHgIIGlPRkY3Z5HGhDgFM8Y7OZm+hAp6kbgh0//6bvvR+0oMil93vYCUEB2wYevkPb/XjaIfXJluq/URxIfnd7Bd7SILV/O5rL0xKSCb4MVAlkX27BRMxNlI1v5JDEZohEPoGt72yiOAOauF5hocUOpHnF8uY++9LDU2J8+iR5Hw3Ev6FCv9df1XDNMbqSKRysYt/qPGppMCj7eETkuvsi4cau25Mda6W31kgw8+PGZvc3lUXVx0fMhlaYUGeuwMmPYoJvkGvUVyEdmhjmbl2gabJ96mFYCby2ArSqA+2Wese72HwleI/DgPbnb5a+IpsgDgNJcIAp1npNozIeCscPehqyJ6qIWfk3FGYKBXNXQ4=
+  distributions: sdist bdist_wheel
+  skip_cleanup: true
+  on:
+    branch: master
