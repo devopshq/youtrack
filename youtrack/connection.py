@@ -711,12 +711,15 @@ class Connection(object):
             '/admin/project/' + urlquote(project_id) + '/version/' + urlquote(name.encode('utf-8')) + "?" +
             urllib.parse.urlencode(params))
 
-    def get_issues(self, project_id, _filter, after, _max):
+    def get_issues(self, project_id, _filter, after, _max, updated_after=None, wikify=None):
         # response, content = self._req('GET', '/project/issues/' + urlquote(projectId) + "?" +
+        params = {'after': str(after),
+                  'max': str(_max),
+                  'filter': _filter}
+        params['updatedAfter'] = updated_after if updated_after is not None
+        params['wikifyDescription'] = wikify if updated_after is not None
         response, content = self._req('GET', '/issue/byproject/' + urlquote(project_id) + "?" +
-                                      urllib.parse.urlencode({'after': str(after),
-                                                              'max': str(_max),
-                                                              'filter': _filter}))
+                                      urllib.parse.urlencode(params))
         xml = minidom.parseString(content)
         return [youtrack.Issue(e, self) for e in xml.documentElement.childNodes if e.nodeType == Node.ELEMENT_NODE]
 
