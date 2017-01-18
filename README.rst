@@ -3,10 +3,10 @@ YouTrack Python 3 Client Library
 
 .. image:: https://travis-ci.org/devopshq/youtrack.svg?branch=master
     :target: https://travis-ci.org/devopshq/youtrack
-.. image:: https://img.shields.io/pypi/v/dohq_youtrack.svg
-    :target: https://pypi.python.org/pypi/dohq_youtrack
-.. image:: https://img.shields.io/pypi/l/dohq_youtrack.svg
-    :target: https://pypi.python.org/pypi/dohq_youtrack
+.. image:: https://img.shields.io/pypi/v/dohq-youtrack.svg
+    :target: https://pypi.python.org/pypi/dohq-youtrack
+.. image:: https://img.shields.io/pypi/l/dohq-youtrack.svg
+    :target: https://pypi.python.org/pypi/dohq-youtrack
 
 
 This document describes Python 3 library that wraps YouTrack REST API.
