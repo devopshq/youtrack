@@ -716,8 +716,10 @@ class Connection(object):
         params = {'after': str(after),
                   'max': str(_max),
                   'filter': _filter}
-        params['updatedAfter'] = updated_after if updated_after is not None
-        params['wikifyDescription'] = wikify if updated_after is not None
+        if updated_after is not None:
+            params['updatedAfter'] = updated_after
+        if wikify is not None:
+            params['wikifyDescription'] = wikify
         response, content = self._req('GET', '/issue/byproject/' + urlquote(project_id) + "?" +
                                       urllib.parse.urlencode(params))
         xml = minidom.parseString(content)
