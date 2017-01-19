@@ -718,7 +718,7 @@ class Connection(object):
                   'filter': _filter}
         if updated_after is not None:
             params['updatedAfter'] = updated_after
-        if updated_after is not None:
+        if wikify is not None:
             params['wikifyDescription'] = wikify
         response, content = self._req('GET', '/issue/byproject/' + urlquote(project_id) + "?" +
                                       urllib.parse.urlencode(params))
