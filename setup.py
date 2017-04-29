@@ -3,7 +3,7 @@
 from setuptools import setup
 from youtrack import __version__
 
-with open('README.rst') as readme:
+with open('README.md') as readme:
     long_description = readme.read()
 
 setup(
