@@ -11,40 +11,40 @@ Current implementation of the YouTrack Python 3 Client Library and scripts is co
 
 Installation
 ------------
-To install YouTrack Python 3 Client Library::
 
+To install YouTrack Python 3 Client Library:
+```
   pip install dohq-youtrack
-
+```
 
 Authenticating
 --------------
-::
-
+```
   from youtrack.connection import Connection
 
   connection = Connection('http://teamsys.intellij.net', 'xxx', 'xxx')
+```
 
 Get Issues
 ----------
-::
 
   # get one issue
+```
   connection.get_issue('SB-1')
-
+```
 
   # get first 10 issues in project JT for query 'for: me #unresolved'
+```
   connection.get_issues('JT', 'for: me #unresolved', 0, 10)
-
+```
 
 Create Issue
 ------------
-
-::
-
+```
   connection.create_issue('SB', 'resttest', 'Test issue', 'Test description', '2', 'Bug', 'First', 'Open', '', '', '')
-
+```
 
 Other Methods
 -------------
 
-See method of class Connection in youtrack/connection.py
+See method of class Connection in [youtrack/connection.py](https://github.com/devopshq/youtrack/blob/master/youtrack/connection.py)
