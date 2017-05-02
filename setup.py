@@ -51,6 +51,7 @@ setup(
     package_data={
         '': [
             '../LICENSE',
+            '../README.md',
         ],
     },
 )
