@@ -22,15 +22,12 @@ else:
 print("dohq-youtrack build version = {}".format(__version__))
 
 
-with open('README.md') as readme:
-    long_description = readme.read()
-
 setup(
     name='dohq-youtrack',
     version=__version__,
     license='MIT License',
     description='YouTrack Python 3 Client Library',
-    long_description=long_description,
+    long_description=open('README.md').read(),
     author='Alexander Kovalev',
     author_email='ak@alkov.pro',
     url='https://devopshq.github.io/youtrack/',
@@ -49,9 +46,8 @@ setup(
         'Topic :: Software Development :: Libraries',
     ],
     keywords=[
-        'development',
-        'dependency',
-        'requirements',
+        'tracker',
+        'youtrack',
     ],
     packages=[
         'youtrack',
@@ -67,8 +63,8 @@ setup(
     zip_safe=True,
     package_data={
         '': [
-            './LICENSE',
-            './README.md',
+            '../LICENSE',
+            '../README.md',
         ],
     },
 )
