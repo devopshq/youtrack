@@ -1,8 +1,7 @@
 YouTrack Python 3 Client Library
 ================================
 
-[![youtrack build status](https://travis-ci.org/devopshq/youtrack.svg?branch=master)](https://travis-ci.org/devopshq/youtrack) [![youtrack pypi build](https://img.shields.io/pypi/v/dohq-youtrack.svg)](https://pypi.python.org/pypi/dohq-youtrack) [![youtrack license](https://img.shields.io/pypi/l/dohq-youtrack.svg)](https://pypi.python.org/pypi/dohq-youtrack)
-
+[![dohq-youtrack build Status](https://travis-ci.org/devopshq/youtrack.svg?branch=master)](https://travis-ci.org/devopshq/youtrack) [![dohq-youtrack on PyPI](https://img.shields.io/pypi/v/dohq-youtrack.svg)](https://pypi.python.org/pypi/dohq-youtrack) [![dohq-youtrack license](https://img.shields.io/pypi/l/dohq-youtrack.svg)](https://github.com/devopshq/youtrack/blob/master/LICENSE)
 
 This document describes Python 3 library that wraps YouTrack REST API.
 
@@ -14,7 +13,7 @@ Installation
 ------------
 To install YouTrack Python 3 Client Library::
 
-  pip install dohq_youtrack
+  pip install dohq-youtrack
 
 
 Authenticating
