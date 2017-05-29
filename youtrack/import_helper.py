@@ -132,7 +132,8 @@ def process_custom_field(connection, project_id, cf_type, cf_name, value_names=N
         values_to_add = calculate_missing_value_names(bundle, value_names)
         connection.createProjectCustomFieldDetailed(project_id, cf_name, "No " + cf_name,
                                                     params={"bundle": bundle.name})
-    [connection.addValueToBundle(bundle, bundle.createElement(name)) for name in values_to_add]
+    for name in values_to_add:
+        connection.addValueToBundle(bundle, bundle.createElement(name))
 
 
 def add_values_to_bundle_safe(connection, bundle, values):
