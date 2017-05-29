@@ -11,9 +11,6 @@ install:
 - pip install -r requirements.txt
 script:
 - printenv
-#- coverage run -m py.test tests
-#- coverage xml
-#- python-codacy-coverage -r coverage.xml
 deploy:
   provider: pypi
   user: devopshq
@@ -23,6 +20,3 @@ deploy:
   skip_cleanup: true
   on:
     all_branches: true
-#env:
-#  global:
-#    secure: KA8BpXc1P2xQh/zvDiipUoCMAOy5CHvtUkAo1dAunIV/sAWbVInw+jayYbs9m7I8883DjxTwaXuL8WGsttGG4By4YWABRPh9L5zGfLicd9lPGRACh6dN4v24BF5dgjbdCM364pMXNqHz3VMXL9grVhDwJ8OYA4OGl4GU1mEXWFgiHr8IsTASlUh+4++HOKAlPjuE6WdJ+0ruXyFR0O+/D0shFrB9GNZNER04vYYy8HYP8PYmfPFyYo6mV1ngtVAYaZ4Tnjqwo74KphUHO/YoocAepnStAWIqJGZtLfL/30AJrpmcQl4FIdIHhbc1DD85uOfLPYvzcTNdlZ4pFJXvrK19eiQ+UgBcMx5EqC6P4YB9AGlzNjxSdc+iycVk+1adIfFc/IxELsbGKNZn8bGa2gS3wbWm9GPopk9GHW2XirWd6wjetzs1QRMNcIxhr+T4/Vc+NzBBIVNSQbpnW0Zyx9gT/Keevo125l/4KwP6PFoONPEp+k4+nUsmoDxW/8nwBNrTeurPA32CHG2KcFApjnXPNtzVUSvME1uVz/QLBo9Jh/Cc5oMnv2zPcnNmAO+eXlRL2e1KzU+1uzkMNswMIIMOetPOkk/DM43Yr2saVbVgvUpvEd94t3qtsdROY7LJQm6s1bOl7NUyyD4Ts4BSKeSnO37lmx5YPbkg+9fFCXE=
