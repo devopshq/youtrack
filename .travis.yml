@@ -1,6 +1,8 @@
 language: python
-python:
-- '3.5'
+python: '3.5'
+addons:
+  apt_packages:
+  - pandoc
 branches:
   only:
   - master
@@ -9,12 +11,18 @@ install:
 - pip install -r requirements.txt
 script:
 - printenv
+#- coverage run -m py.test tests
+#- coverage xml
+#- python-codacy-coverage -r coverage.xml
 deploy:
   provider: pypi
   user: devopshq
   password:
-    secure: "EmzZanCfpVnRabeesrV9DIcYoxcgYmsfC/6gEbD55iBiRFy9/+YRNMP7SwJZZCWOxxDstFpH4H+aCDssxBNfAUEW6ejs0qpo6Z+OWmqmWCj2spHrmwyhk8tkme70OvIC6P+JCc7iFOaYiA0oorEMv/hjSpKuDTT/TEeU86jSYrhDKXO4nljeR8tHBijKKXGLMGI8q/vL0WBja3mk7tEOz96wIC5ANL+yaUN6Hge1auMnUu8dJ4Cs9Zop7cy3xWmra88SAQWjNNt1dAGlYysTYuQfjyQ5wHBznFABt5bMNxJUOFR6S58UCKFMk9mB5AV+MiKE/CH34ROhvN+Dkvx613VCHQJplRokQI9nlQqFu1gzYbLr/VTvV1kFeGwVPU9ShiAFo/qM4XMyosxGwS21QFSpgREbUUOoVZ0iPvNFpDHuBCFuFZpREX4j6vROcvAXZMZimhdhZ5RUPjgkHz2vkoG1UxmJDJPCeyGxLYFk0H51qGzbn3lAojWREX+Buto8Z9Ulw7NuA4oHmt6Ny4IeuaineiaFvR8PExloiqqzfZ639uDpNOGejhlx8L3/9jUP3jfcgI5Zik8/hfVOP41k1PdhyGRwfLcrte9xbAkqgzewgDBu/EObcd28y/1NWetbLgDqWbQMX7PS3hf9ErsqhwOhVeQfvIGzet3tjQL9GGU="
+    secure: EmzZanCfpVnRabeesrV9DIcYoxcgYmsfC/6gEbD55iBiRFy9/+YRNMP7SwJZZCWOxxDstFpH4H+aCDssxBNfAUEW6ejs0qpo6Z+OWmqmWCj2spHrmwyhk8tkme70OvIC6P+JCc7iFOaYiA0oorEMv/hjSpKuDTT/TEeU86jSYrhDKXO4nljeR8tHBijKKXGLMGI8q/vL0WBja3mk7tEOz96wIC5ANL+yaUN6Hge1auMnUu8dJ4Cs9Zop7cy3xWmra88SAQWjNNt1dAGlYysTYuQfjyQ5wHBznFABt5bMNxJUOFR6S58UCKFMk9mB5AV+MiKE/CH34ROhvN+Dkvx613VCHQJplRokQI9nlQqFu1gzYbLr/VTvV1kFeGwVPU9ShiAFo/qM4XMyosxGwS21QFSpgREbUUOoVZ0iPvNFpDHuBCFuFZpREX4j6vROcvAXZMZimhdhZ5RUPjgkHz2vkoG1UxmJDJPCeyGxLYFk0H51qGzbn3lAojWREX+Buto8Z9Ulw7NuA4oHmt6Ny4IeuaineiaFvR8PExloiqqzfZ639uDpNOGejhlx8L3/9jUP3jfcgI5Zik8/hfVOP41k1PdhyGRwfLcrte9xbAkqgzewgDBu/EObcd28y/1NWetbLgDqWbQMX7PS3hf9ErsqhwOhVeQfvIGzet3tjQL9GGU=
   distributions: sdist bdist_wheel
   skip_cleanup: true
   on:
-    branch: master
+    all_branches: true
+#env:
+#  global:
+#    secure: KA8BpXc1P2xQh/zvDiipUoCMAOy5CHvtUkAo1dAunIV/sAWbVInw+jayYbs9m7I8883DjxTwaXuL8WGsttGG4By4YWABRPh9L5zGfLicd9lPGRACh6dN4v24BF5dgjbdCM364pMXNqHz3VMXL9grVhDwJ8OYA4OGl4GU1mEXWFgiHr8IsTASlUh+4++HOKAlPjuE6WdJ+0ruXyFR0O+/D0shFrB9GNZNER04vYYy8HYP8PYmfPFyYo6mV1ngtVAYaZ4Tnjqwo74KphUHO/YoocAepnStAWIqJGZtLfL/30AJrpmcQl4FIdIHhbc1DD85uOfLPYvzcTNdlZ4pFJXvrK19eiQ+UgBcMx5EqC6P4YB9AGlzNjxSdc+iycVk+1adIfFc/IxELsbGKNZn8bGa2gS3wbWm9GPopk9GHW2XirWd6wjetzs1QRMNcIxhr+T4/Vc+NzBBIVNSQbpnW0Zyx9gT/Keevo125l/4KwP6PFoONPEp+k4+nUsmoDxW/8nwBNrTeurPA32CHG2KcFApjnXPNtzVUSvME1uVz/QLBo9Jh/Cc5oMnv2zPcnNmAO+eXlRL2e1KzU+1uzkMNswMIIMOetPOkk/DM43Yr2saVbVgvUpvEd94t3qtsdROY7LJQm6s1bOl7NUyyD4Ts4BSKeSnO37lmx5YPbkg+9fFCXE=

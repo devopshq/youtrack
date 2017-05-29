@@ -1,4 +1,7 @@
 httplib2
+pypandoc
+coverage
+codacy-coverage
 --index-url https://pypi.python.org/simple/
 
 -e .

@@ -35,3 +35,8 @@ nosetests.xml
 .project
 .pydevproject
 .idea
+.cache
+codacy_cover.*
+coverage.xml
+dohq_youtrack.egg-info
+README.rst

@@ -62,7 +62,7 @@ class Py3Cmp:
 class YouTrackBroadException(Exception):
     def __init__(self, msg):
         self.message = msg
-        Exception.__init__(self, msg)
+        super().__init__(msg)
 
 
 class YouTrackException(Exception):
@@ -85,13 +85,12 @@ class YouTrackException(Exception):
                     self.error = content
                     msg += ": " + self.error
 
-        Exception.__init__(self, msg)
+        super().__init__(msg)
 
 
 class YouTrackObject(Py3Cmp):
-    _data = {}
-
     def __init__(self, xml=None, youtrack=None):
+        self._data = {}
         self.youtrack = youtrack
         self._attribute_types = dict()
         self._update(xml)
@@ -112,7 +111,7 @@ class YouTrackObject(Py3Cmp):
         if el.attributes is not None:
             for i in range(el.attributes.length):
                 a = el.attributes.item(i)
-                setattr(self, a.name, a.value)
+                self[a.name] = a.value
 
     def _update_from_children(self, el):
         children = [e for e in el.childNodes if e.nodeType == Node.ELEMENT_NODE]
@@ -132,11 +131,12 @@ class YouTrackObject(Py3Cmp):
                 elif c.hasAttribute('value'):
                     value = c.getAttribute('value')
                 if value is not None:
-                    self._data[name] = value
+                    self[name] = value
                     if c.hasAttribute('xsi:type'):
                         self._attribute_types[name] = c.getAttribute('xsi:type')
 
-    def _text(self, el):
+    @staticmethod
+    def _text(el):
         return "".join([e.data for e in el.childNodes if e.nodeType == Node.TEXT_NODE])
 
     def __repr__(self):
@@ -151,10 +151,13 @@ class YouTrackObject(Py3Cmp):
         for item in self._data:
             if item == '_attribute_types':
                 continue
-            attr = self._data[item]
+            attr = self[item]
             if isinstance(attr, basestring) or isinstance(attr, list) \
                     or getattr(attr, '__iter__', False):
                 yield item
+
+    def get(self, key, default):
+        return self._data.get(key, default)
 
     def __getitem__(self, key):
         return self._data[key]
@@ -162,26 +165,23 @@ class YouTrackObject(Py3Cmp):
     def __setitem__(self, key, value):
         self._data[key] = value
 
-    def __getattr__(self, item):
-        if item in self:
-            return self[item]
-        elif item in self._data:
-            return self._data[item]
-        else:
-            return self.__getattr__(item)
+    # def __getattr__(self, item):
+    #     if item in self:
+    #         return self[item]
+    #     elif item in self._data:
+    #         return self._data[item]
+    #     else:
+    #         return self.__getattr__(item)
 
-    def __setattr__(self, key, value):
-        key = to_str(key)
-        if key in self:
-            self[key] = value
-        else:
-            self._data[key] = value
+    # def __setattr__(self, key, value):
+    #     key = to_str(key)
+    #     if key in self:
+    #         self[key] = value
+    #     else:
+    #         self._data[key] = value
 
 
 class YouTrackError(YouTrackObject):
-    def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
-
     def to_xml(self):
         super().to_xml()
 
@@ -194,7 +194,7 @@ class YouTrackError(YouTrackObject):
 
 class Issue(YouTrackObject):
     def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
+        super().__init__(xml, youtrack)
         if xml is not None:
             if len(xml.getElementsByTagName('links')) > 0:
                 self.links = [Link(e, youtrack) for e in xml.getElementsByTagName('issueLink')]
@@ -210,30 +210,30 @@ class Issue(YouTrackObject):
                 self.attachments = None
             for m in ['fixedVersion', 'affectsVersion']:
                 self._normalize_multiple(m)
-            if ('fixedInBuild' in self._data) and (self._data['fixedInBuild'] == 'Next build'):
-                self._data['fixedInBuild'] = None
+            if self.get('fixedInBuild', '') == 'Next build':
+                self['fixedInBuild'] = None
 
     def to_xml(self):
         super().to_xml()
 
     def _normalize_multiple(self, name):
         if name in self._data:
-            attr_value = self._data[name]
+            attr_value = self[name]
             if not isinstance(attr_value, list):
                 if attr_value is None or not len(attr_value):
                     self._data.pop(name)
                 else:
                     attr_value = to_str(attr_value)
-                    self._data[name] = [value.strip() for value in attr_value.split(',')]
+                    self[name] = [value.strip() for value in attr_value.split(',')]
 
     def get_reporter(self):
-        return self.youtrack.get_user(self._data['reporterName'])
+        return self.youtrack.get_user(self['reporterName'])
 
     def has_assignee(self):
         return 'Assignee' in self._data
 
     def get_assignee(self):
-        assignee = self._data.get('Assignee', None)
+        assignee = self.get('Assignee', None)
         if assignee is None:
             return None
         elif isinstance(assignee, (list, tuple)):
@@ -241,13 +241,13 @@ class Issue(YouTrackObject):
         return self.youtrack.get_user(assignee)
 
     def get_updater(self):
-        return self.youtrack.get_user(self._data.get('updaterName', None))
+        return self.youtrack.get_user(self.get('updaterName', None))
 
     def has_voters(self):
         return 'voterName' in self._data
 
     def get_voters(self):
-        voters = self._data.get('voterName', None)
+        voters = self.get('voterName', None)
         if voters:
             if isinstance(voters, list):
                 voters = [self.youtrack.get_user(v) for v in voters]
@@ -257,43 +257,42 @@ class Issue(YouTrackObject):
 
     def get_comments(self):
         # TODO: do not make rest request if issue was inited with comments
-        if self._data.get('comments', None) is None:
-            self._data['comments'] = self.youtrack.get_comments(self._data['id'])
-        return self._data['comments']
+        if self.get('comments', None) is None:
+            self['comments'] = self.youtrack.get_comments(self['id'])
+        return self['comments']
 
     def get_attachments(self):
-        if self._data.get('attachments', None) is None:
-            return self.youtrack.get_attachments(self._data['id'])
+        if self.get('attachments', None) is None:
+            return self.youtrack.get_attachments(self['id'])
         else:
-            return self._data['attachments']
+            return self['attachments']
 
     def delete_attachment(self, attachment):
         return self.youtrack.delete_attachment(self._data['id'], attachment.id)
 
     def get_links(self, outward_only=False):
-        if self._data.get('links', None) is None:
-            return self.youtrack.get_links(self._data['id'], outward_only)
+        if self.get('links', None) is None:
+            return self.youtrack.get_links(self['id'], outward_only)
         else:
-            return [l for l in self._data['links'] if l.source == self._data['id'] or not outward_only]
+            return [l for l in self['links'] if l.source == self['id'] or not outward_only]
 
     @property
     def events(self):
-        return self.youtrack.get_events(self._data['id'])
+        return self.youtrack.get_events(self['id'])
 
     @property
     def custom_fields(self):
         cf = []
         for attr_name, attr_type in self._attribute_types.items():
             if attr_type in ('CustomFieldValue', 'MultiUserField'):
-                cf.append(self._data[attr_name])
+                cf.append(self[attr_name])
         return cf
 
 
 class Comment(YouTrackObject):
-    author = ''
-
     def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
+        self.author = ''
+        super().__init__(xml, youtrack)
         if not hasattr(self, 'text'):
             self.text = ''
 
@@ -310,7 +309,7 @@ class IssueChange(YouTrackObject):
         self.updated = 0
         self.updater_name = None
         self.comments = []
-        YouTrackObject.__init__(self, xml, youtrack)
+        super().__init__(xml, youtrack)
 
     def to_xml(self):
         super().to_xml()
@@ -341,7 +340,7 @@ class ChangeField(YouTrackObject):
         self.name = None
         self.old_value = []
         self.new_value = []
-        YouTrackObject.__init__(self, xml, youtrack)
+        super().__init__(xml, youtrack)
 
     def to_xml(self):
         super().to_xml()
@@ -361,9 +360,6 @@ class Link(YouTrackObject):
     source = ''
     target = ''
 
-    def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
-
     def to_xml(self):
         super().to_xml()
 
@@ -379,10 +375,9 @@ class Link(YouTrackObject):
 
 
 class Attachment(YouTrackObject):
-    author_login = ''
-
     def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
+        self.author_login = ''
+        super().__init__(xml, youtrack)
         # Workaround for JT-18936
         self.url = re.sub(r'^.*?(?=/_persistent)', '', self.url)
 
@@ -399,10 +394,9 @@ class Attachment(YouTrackObject):
 
 
 class User(YouTrackObject):
-    login = ''
-
     def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
+        self.login = ''
+        super().__init__(xml, youtrack)
         self.get_groups = lambda: []
 
     def to_xml(self):
@@ -419,19 +413,15 @@ class User(YouTrackObject):
 
 
 class Group(YouTrackObject):
-    name = ''
-
     def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
+        self.name = ''
+        super().__init__(xml, youtrack)
 
     def to_xml(self):
         super().to_xml()
 
 
 class Role(YouTrackObject):
-    def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
-
     def to_xml(self):
         super().to_xml()
 
@@ -440,7 +430,7 @@ class UserRole(YouTrackObject):
     def __init__(self, xml=None, youtrack=None):
         self.name = ''
         self.projects = []
-        YouTrackObject.__init__(self, xml, youtrack)
+        super().__init__(xml, youtrack)
 
     def _update(self, xml):
         if xml is None:
@@ -466,64 +456,51 @@ class UserRole(YouTrackObject):
 
 
 class Permission(YouTrackObject):
-    def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
-
     def to_xml(self):
-        super().to_xml()
+        pass
 
 
 class Project(YouTrackObject):
-    id = ''
-
     def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
+        super().__init__(xml, youtrack)
+        self[id] = ''
         if 'description' not in self._data:
-            self._data['description'] = ''
+            self['description'] = ''
 
     def to_xml(self):
         super().to_xml()
 
     def get_subsystems(self):
-        return self.youtrack.get_subsystems(self._data['id'])
+        return self.youtrack.get_subsystems(self['id'])
 
     def create_subsystem(self, name, is_default, default_assignee_login):
-        return self.youtrack.create_subsystem(self._data['id'], name, is_default, default_assignee_login)
+        return self.youtrack.create_subsystem(self['id'], name, is_default, default_assignee_login)
 
 
 class Subsystem(YouTrackObject):
-    def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
-
     def to_xml(self):
         super().to_xml()
 
 
 class Version(YouTrackObject):
     def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
+        super().__init__(xml, youtrack)
         if 'description' not in self._data:
-            self._data['description'] = ''
+            self['description'] = ''
 
         if 'releaseDate' not in self._data:
-            self._data['releaseDate'] = None
+            self['releaseDate'] = None
 
     def to_xml(self):
         super().to_xml()
 
 
 class IssueLinkType(YouTrackObject):
-    def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
-
     def to_xml(self):
         super().to_xml()
 
 
 class WorkItem(YouTrackObject):
-    def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
-
     def to_xml(self):
         super().to_xml()
 
@@ -533,28 +510,22 @@ class WorkItem(YouTrackObject):
         if isinstance(xml, Document):
             xml = xml.documentElement
 
-        self._data['url'] = xml.getAttribute('url')
+        self['url'] = xml.getAttribute('url')
         for e in xml.childNodes:
             if e.tagName == 'author':
-                self._data['authorLogin'] = e.getAttribute('login')
+                self['authorLogin'] = e.getAttribute('login')
             elif e.tagName.lower() == 'worktype':
-                self._data['worktype'] = self._text(e.getElementsByTagName('name')[0])
+                self['worktype'] = self._text(e.getElementsByTagName('name')[0])
             else:
                 self[e.tagName] = self._text(e)
 
 
 class CustomField(YouTrackObject):
-    def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
-
     def to_xml(self):
         super().to_xml()
 
 
 class ProjectCustomField(YouTrackObject):
-    def __init__(self, xml=None, youtrack=None):
-        YouTrackObject.__init__(self, xml, youtrack)
-
     def to_xml(self):
         super().to_xml()
 
@@ -563,7 +534,7 @@ class ProjectCustomField(YouTrackObject):
         for c in el.getElementsByTagName('param'):
             name = c.getAttribute('name')
             value = c.getAttribute('value')
-            self._data[name] = value
+            self[name] = value
             self.params[name] = value
 
 
@@ -571,7 +542,7 @@ class UserBundle(YouTrackObject):
     def __init__(self, xml=None, youtrack=None):
         self.users = []
         self.groups = []
-        YouTrackObject.__init__(self, xml, youtrack)
+        super().__init__(xml, youtrack)
 
     def _update(self, xml):
         if xml is None:
@@ -600,7 +571,8 @@ class UserBundle(YouTrackObject):
         result += '</userBundle>'
         return result
 
-    def get_field_type(self):
+    @staticmethod
+    def get_field_type():
         return "user"
 
     def get_all_users(self):
@@ -624,7 +596,7 @@ class Bundle(YouTrackObject):
         self._element_tag_name = element_tag_name
         self._bundle_tag_name = bundle_tag_name
         self.values = []
-        YouTrackObject.__init__(self, xml, youtrack)
+        super().__init__(xml, youtrack)
 
     def _update(self, xml):
         if xml is None:
@@ -660,7 +632,7 @@ class Bundle(YouTrackObject):
 class BundleElement(YouTrackObject):
     def __init__(self, element_tag_name, xml=None, youtrack=None):
         self.element_name = element_tag_name
-        YouTrackObject.__init__(self, xml, youtrack)
+        super().__init__(xml, youtrack)
 
     def to_xml(self):
         result = '<' + self.element_name
@@ -695,7 +667,7 @@ class BundleElement(YouTrackObject):
 
 class EnumBundle(Bundle):
     def __init__(self, xml=None, youtrack=None):
-        Bundle.__init__(self, "value", "enumeration", xml, youtrack)
+        super().__init__("value", "enumeration", xml, youtrack)
 
     def _create_element(self, xml):
         return EnumField(xml, self.youtrack)
@@ -706,12 +678,12 @@ class EnumBundle(Bundle):
 
 class EnumField(BundleElement):
     def __init__(self, xml=None, youtrack=None):
-        BundleElement.__init__(self, "value", xml, youtrack)
+        super().__init__("value", xml, youtrack)
 
 
 class BuildBundle(Bundle):
     def __init__(self, xml=None, youtrack=None):
-        Bundle.__init__(self, "build", "buildBundle", xml, youtrack)
+        super().__init__("build", "buildBundle", xml, youtrack)
 
     def _create_element(self, xml):
         return Build(xml, self.youtrack)
@@ -719,7 +691,7 @@ class BuildBundle(Bundle):
 
 class Build(BundleElement):
     def __init__(self, xml=None, youtrack=None):
-        BundleElement.__init__(self, "build", xml, youtrack)
+        super().__init__("build", xml, youtrack)
 
     def _update_specific_attributes(self, xml):
         self.assembleDate = xml.getAttribute('assembleName')
@@ -727,7 +699,7 @@ class Build(BundleElement):
 
 class OwnedFieldBundle(Bundle):
     def __init__(self, xml=None, youtrack=None):
-        Bundle.__init__(self, "ownedField", "ownedFieldBundle", xml, youtrack)
+        super().__init__("ownedField", "ownedFieldBundle", xml, youtrack)
 
     def _create_element(self, xml):
         return OwnedField(xml, self.youtrack)
@@ -735,7 +707,7 @@ class OwnedFieldBundle(Bundle):
 
 class OwnedField(BundleElement):
     def __init__(self, xml=None, youtrack=None):
-        BundleElement.__init__(self, "ownedField", xml, youtrack)
+        super().__init__("ownedField", xml, youtrack)
 
     def _update_specific_attributes(self, xml):
         owner = xml.getAttribute("owner")
@@ -747,7 +719,7 @@ class OwnedField(BundleElement):
 
 class StateBundle(Bundle):
     def __init__(self, xml=None, youtrack=None):
-        Bundle.__init__(self, "state", "stateBundle", xml, youtrack)
+        super().__init__("state", "stateBundle", xml, youtrack)
 
     def _create_element(self, xml):
         return StateField(xml, self.youtrack)
@@ -755,7 +727,7 @@ class StateBundle(Bundle):
 
 class StateField(BundleElement):
     def __init__(self, xml=None, youtrack=None):
-        BundleElement.__init__(self, "state", xml, youtrack)
+        super().__init__("state", xml, youtrack)
 
     def _update_specific_attributes(self, xml):
         self.is_resolved = xml.getAttribute("isResolved")
@@ -763,7 +735,7 @@ class StateField(BundleElement):
 
 class VersionBundle(Bundle):
     def __init__(self, xml=None, youtrack=None):
-        Bundle.__init__(self, "version", "versions", xml, youtrack)
+        super().__init__("version", "versions", xml, youtrack)
 
     def _create_element(self, xml):
         return VersionField(xml, self.youtrack)
@@ -771,7 +743,7 @@ class VersionBundle(Bundle):
 
 class VersionField(BundleElement):
     def __init__(self, xml=None, youtrack=None):
-        BundleElement.__init__(self, "version", xml, youtrack)
+        super().__init__("version", xml, youtrack)
 
     def _update_specific_attributes(self, xml):
         self.releaseDate = xml.getAttribute("releaseDate")
@@ -784,7 +756,7 @@ class IntelliSense(YouTrackObject):
         self.suggestions = []
         self.highlights = []
         self.queries = []
-        YouTrackObject.__init__(self, xml, youtrack)
+        super().__init__(xml, youtrack)
 
     def to_xml(self):
         super().to_xml()
