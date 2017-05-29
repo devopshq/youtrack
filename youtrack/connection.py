@@ -1102,14 +1102,14 @@ class Connection(object):
         "ownedField": "ownedFieldBundle",
         "state": "stateBundle",
         "version": "versionBundle",
-        "user": "userBundle"
+        "user": "userBundle",
     }
 
     bundle_types = {
-        "enum": lambda xml, yt: youtrack.EnumBundle(xml, yt),
-        "build": lambda xml, yt: youtrack.BuildBundle(xml, yt),
-        "ownedField": lambda xml, yt: youtrack.OwnedFieldBundle(xml, yt),
-        "state": lambda xml, yt: youtrack.StateBundle(xml, yt),
-        "version": lambda xml, yt: youtrack.VersionBundle(xml, yt),
-        "user": lambda xml, yt: youtrack.UserBundle(xml, yt)
+        "enum": youtrack.EnumBundle,
+        "build": youtrack.BuildBundle,
+        "ownedField": youtrack.OwnedFieldBundle,
+        "state": youtrack.StateBundle,
+        "version": youtrack.VersionBundle,
+        "user": youtrack.UserBundle,
     }

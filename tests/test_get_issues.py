@@ -14,7 +14,7 @@ class TestGetIssues:
         user = os.getenv('TEST_USER', '')
         password = os.getenv('TEST_PASSWORD', '')
         TestGetIssues.connection = Connection(server, user, password)
-        pass
+        self.connection = TestGetIssues.connection
 
     def test_get_issues(self):
         self.connection = TestGetIssues.connection
