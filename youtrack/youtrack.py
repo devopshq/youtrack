@@ -31,11 +31,11 @@ def cmp(a, b):
 
 
 def to_str(a):
-    return a.decode('utf-8') if type(a) is bytes else str(a)
+    return a.decode('utf-8') if isinstance(a, bytes) else str(a)
 
 
 def to_bytes(a):
-    return a.encode('utf-8') if type(a) is str else a
+    return a.encode('utf-8') if isinstance(a, str) else a
 
 
 # mixin class for Python3 supporting __cmp__
@@ -164,21 +164,6 @@ class YouTrackObject(Py3Cmp):
 
     def __setitem__(self, key, value):
         self._data[key] = value
-
-    # def __getattr__(self, item):
-    #     if item in self:
-    #         return self[item]
-    #     elif item in self._data:
-    #         return self._data[item]
-    #     else:
-    #         return self.__getattr__(item)
-
-    # def __setattr__(self, key, value):
-    #     key = to_str(key)
-    #     if key in self:
-    #         self[key] = value
-    #     else:
-    #         self._data[key] = value
 
 
 class YouTrackError(YouTrackObject):

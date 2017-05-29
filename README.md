@@ -1,7 +1,7 @@
 YouTrack Python 3 Client Library
 ================================
 
-[![build](https://travis-ci.org/devopshq/youtrack.svg?branch=master)](https://travis-ci.org/devopshq/youtrack) [![pypi](https://img.shields.io/pypi/v/dohq-youtrack.svg)](https://pypi.python.org/pypi/dohq-youtrack) [![codacy](https://api.codacy.com/project/badge/Grade/30f18d23f1a5481cb3c5ca6570458ad7)](https://www.codacy.com/app/tim55667757/youtrack/dashboard) [![license](https://img.shields.io/pypi/l/dohq-youtrack.svg)](https://github.com/devopshq/youtrack/blob/master/LICENSE)
+[![build](https://travis-ci.org/devopshq/youtrack.svg?branch=master)](https://travis-ci.org/devopshq/youtrack) [![pypi](https://img.shields.io/pypi/v/dohq-youtrack.svg)](https://pypi.python.org/pypi/dohq-youtrack) [![codacy](https://api.codacy.com/project/badge/Grade/9f6d2c74eb1a4d798b87bd05bed6ee21)](https://www.codacy.com/app/devopshq/youtrack) [![license](https://img.shields.io/pypi/l/dohq-youtrack.svg)](https://github.com/devopshq/youtrack/blob/master/LICENSE)
 
 This document describes Python 3 library that wraps YouTrack REST API.
 

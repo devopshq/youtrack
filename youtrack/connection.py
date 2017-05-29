@@ -262,7 +262,7 @@ class Connection(object):
             params['created'] = created
         else:
             try:
-                params['created'] = self.get_issue(issue_id).created
+                params['created'] = self.get_issue(issue_id)['created']
             except youtrack.YouTrackException:
                 params['created'] = str(calendar.timegm(datetime.now().timetuple()) * 1000)
 
@@ -360,7 +360,7 @@ class Connection(object):
 
     def import_issues(self, project_id, assignee_group, issues):
         """ Import issues, returns import result (http://confluence.jetbrains.net/display/YTD2/Import+Issues)
-            Accepts retrun of getIssues()
+            Accepts return of getIssues()
             Example: importIssues([{'numberInProject':'1', 'summary':'some problem', 'description':'some description',
                                     'priority':'1',
                                     'fixedVersion':['1.0', '2.0'],
@@ -377,8 +377,8 @@ class Connection(object):
                       'entityId', 'tags', 'sprint']
 
         tt_settings = self.get_project_time_tracking_settings(project_id)
-        if tt_settings and tt_settings.Enabled and tt_settings.TimeSpentField:
-            bad_fields.append(tt_settings.TimeSpentField)
+        if tt_settings and tt_settings['Enabled'] and tt_settings['TimeSpentField']:
+            bad_fields.append(tt_settings['TimeSpentField'])
 
         xml = '<issues>\n'
         issue_records = dict([])
@@ -1008,7 +1008,8 @@ class Connection(object):
             tag_name)]
         return [self.get_bundle(field_type, name) for name in names]
 
-    def get_field_type(self, field_type):
+    @staticmethod
+    def get_field_type(field_type):
         if "[" in field_type:
             field_type = field_type[0:-3]
         return field_type

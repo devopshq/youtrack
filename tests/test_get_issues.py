@@ -17,8 +17,9 @@ class TestGetIssues:
         pass
 
     def test_get_issues(self):
+        self.connection = TestGetIssues.connection
         project = os.getenv('TEST_PROJECT', '')
-        issues = TestGetIssues.connection.get_issues(project, 'for: me #unresolved', 0, 10)
+        issues = self.connection.get_issues(project, 'for: me #unresolved', 0, 10)
         pprint.PrettyPrinter(indent=0).pprint(issues)
         prev = issues[0]
         for i in range(1, len(issues)):
@@ -26,16 +27,18 @@ class TestGetIssues:
             prev = issues[i]
 
     def test_get_issue_attributes(self):
+        self.connection = TestGetIssues.connection
         project = os.getenv('TEST_PROJECT', '')
-        issues = TestGetIssues.connection.get_issues(project, 'for: me #unresolved', 0, 1)
+        issues = self.connection.get_issues(project, 'for: me #unresolved', 0, 1)
         pprint.PrettyPrinter(indent=0).pprint(issues)
         if issues:
             issue = issues[0]
             assert isinstance(issue['id'], str)
 
     def test_get_issue_attribute_error(self):
+        self.connection = TestGetIssues.connection
         project = os.getenv('TEST_PROJECT', '')
-        issues = TestGetIssues.connection.get_issues(project, 'for: me #unresolved', 0, 1)
+        issues = self.connection.get_issues(project, 'for: me #unresolved', 0, 1)
         pprint.PrettyPrinter(indent=0).pprint(issues)
         if issues:
             issue = issues[0]

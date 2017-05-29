@@ -108,9 +108,9 @@ def process_custom_field(connection, project_id, cf_type, cf_name, value_names=N
 
     Raises:
         LogicException: If custom field already exists, but has wrong type.
-        YouTrackException: If something is wrong with queries.  
-
+        YouTrackException: If something is wrong with queries.
     """
+
     _create_custom_field_prototype(connection, cf_type, cf_name)
     if cf_type[0:-3] not in connection.bundle_types:
         value_names = None
