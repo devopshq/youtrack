@@ -48,3 +48,45 @@ class TestGetIssues:
 
             with pytest.raises(AttributeError) as e_info:
                 tmp = issue.wrong_attribute
+
+    def test_get_issue_comments(self):
+        self.connection = TestGetIssues.connection
+        project = os.getenv('TEST_PROJECT', '')
+        issues = self.connection.get_issues(project, 'for: me #unresolved', 0, 10)
+        pprint.PrettyPrinter(indent=0).pprint(issues)
+        count = 0
+        for issue in issues:
+            comments = issue.get_comments()
+            pprint.PrettyPrinter(indent=4).pprint(comments)
+            count += len(comments)
+
+            assert count > 0
+
+    def test_get_issue_attachments(self):
+        self.connection = TestGetIssues.connection
+        project = os.getenv('TEST_PROJECT', '')
+        issues = self.connection.get_issues(project, 'for: me #unresolved', 0, 10)
+        pprint.PrettyPrinter(indent=0).pprint(issues)
+        count = 0
+        for issue in issues:
+            attachments = issue.get_attachments()
+            pprint.PrettyPrinter(indent=4).pprint(attachments)
+            count += len(attachments)
+
+            assert count > 0
+
+    def test_get_issue_attachments_content(self):
+        self.connection = TestGetIssues.connection
+        project = os.getenv('TEST_PROJECT', '')
+        issues = self.connection.get_issues(project, 'for: me #unresolved', 0, 10)
+        pprint.PrettyPrinter(indent=0).pprint(issues)
+        count = 0
+        for issue in issues:
+            # attachments = issue.get_attachments()
+            attachments = self.connection.get_attachments(issue['id'])
+            pprint.PrettyPrinter(indent=4).pprint(attachments)
+            for attachment in attachments:
+                content = attachment.get_content()
+                count += content.length
+
+        assert count > 0

@@ -364,13 +364,13 @@ class Attachment(YouTrackObject):
         self.author_login = ''
         super().__init__(xml, youtrack)
         # Workaround for JT-18936
-        self.url = re.sub(r'^.*?(?=/_persistent)', '', self.url)
+        self['url'] = re.sub(r'^.*?(?=/_persistent)', '', self['url'])
 
     def to_xml(self):
         super().to_xml()
 
     def get_content(self):
-        return self.youtrack.get_attachment_content(self.url.encode('utf-8'))
+        return self.youtrack.get_attachment_content(self['url'])
 
     def get_author(self):
         if self.author_login == '<no user>':
