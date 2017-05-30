@@ -99,6 +99,7 @@ setup(
     ],
     tests_require=[
         'pytest',
+        'PyHamcrest',
     ],
     zip_safe=True,
     package_data={
