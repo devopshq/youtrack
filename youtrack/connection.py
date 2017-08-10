@@ -77,14 +77,17 @@ class Connection(object):
                         'Cache-Control': 'no-cache'}
 
     @relogin_on_401
-    def _req(self, method, url, body=None, ignore_status=None, content_type=None):
+    def _req(self, method, url, body=None, ignore_status=None, content_type=None, accept_header=None):
         headers = self.headers
+        headers = headers.copy()
         if method == 'PUT' or method == 'POST':
-            headers = headers.copy()
             if content_type is None:
                 content_type = 'application/xml; charset=UTF-8'
             headers['Content-Type'] = content_type
             headers['Content-Length'] = str(len(body)) if body else '0'
+
+        if accept_header is not None:
+            headers['Accept'] = accept_header
 
         response, content = self.http.request(self.base_url + url, method, headers=headers, body=body)
         content = content.translate(None, '\0'.encode('utf-8'))
@@ -729,7 +732,7 @@ class Connection(object):
         while True:
             url_filter_list = [('filter', _filter)]
             final_url = '/issue/count?' + urllib.parse.urlencode(url_filter_list)
-            response, content = self._req('GET', final_url)
+            response, content = self._req('GET', final_url, None, None, None, 'application/json')
             result = eval(content.replace('callback'.encode('utf-8'), ''.encode('utf-8')))
             number_of_issues = result['value']
             if not wait_for_server:
