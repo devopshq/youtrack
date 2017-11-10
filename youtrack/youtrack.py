@@ -597,8 +597,8 @@ class Bundle(YouTrackObject):
             self.values = []
 
     def to_xml(self):
-        result = '<%s name="%s">' % (self._bundle_tag_name, escape(self.name.encode('utf-8')))
-        result += ''.join(v.toXml() for v in self.values)
+        result = '<%s name="%s">' % (self._bundle_tag_name, escape(self.name))
+        result += ''.join(v.to_xml() for v in self.values)
         result += '</%s>' % self._bundle_tag_name
         return result
 
@@ -628,11 +628,11 @@ class BundleElement(YouTrackObject):
             if value is None or not len(value):
                 continue
             if isinstance(elem, str):
-                elem = elem.encode('utf-8')
+                elem = elem
             if isinstance(value, str):
-                value = value.encode('utf-8')
+                value = value
             result += ' %s="%s"' % (escape(elem), escape(str(value)))
-        result += ">%s</%s>" % (escape(self.name.encode('utf-8')), self.element_name)
+        result += ">%s</%s>" % (escape(self.name), self.element_name)
         return result
 
     def _update(self, xml):
