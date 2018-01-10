@@ -162,6 +162,14 @@ class Connection(object):
         return self._req('PUT', '/issue', urllib.parse.urlencode(params),
                          content_type='application/x-www-form-urlencoded')
 
+    def update_issue(self, issue_id, summary, description=''):
+        url_summary = urlquote(utf8encode(summary))
+        url_description = urlquote(utf8encode(description))
+
+        response, _ = self._req('POST',
+                                '/issue/%s?summary=%s&description=%s' % (issue_id, url_summary, url_description))
+        return response
+
     def delete_issue(self, issue_id):
         return self._req('DELETE', '/issue/%s' % issue_id)
 
