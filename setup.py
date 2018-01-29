@@ -66,7 +66,7 @@ setup(
     version=version,
     license='MIT License',
     description='YouTrack Python 3 Client Library',
-    # long_description=open('README.md').read(),
+    long_description='Documentation: https://devopshq.github.io/youtrack/,
     author='Alexander Kovalev',
     author_email='ak@alkov.pro',
     url='https://devopshq.github.io/youtrack/',
