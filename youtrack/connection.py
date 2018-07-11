@@ -901,7 +901,8 @@ class Connection(object):
     def get_work_items(self, issue_id):
         try:
             response, content = self._req('GET',
-                                          '/issue/%s/timetracking/workitem' % urlquote(issue_id))
+                                          '/issue/%s/timetracking/workitem' % urlquote(issue_id),
+                                          accept_header='application/xml; charset=UTF-8')
             xml = minidom.parseString(content)
             return [youtrack.WorkItem(e, self) for e in xml.documentElement.childNodes if
                     e.nodeType == Node.ELEMENT_NODE]
