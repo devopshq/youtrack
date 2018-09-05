@@ -731,7 +731,10 @@ class Connection(object):
             params['updatedAfter'] = updated_after
         if wikify is not None:
             params['wikifyDescription'] = wikify
-        response, content = self._req('GET', '/issue/byproject/' + urlquote(project_id) + "?" +
+        path = '/issue'
+        if project_id:
+        path += '/byproject/' + urlquote(project_id)
+        response, content = self._req('GET', path + "?" +
                                       urllib.parse.urlencode(params))
         xml = minidom.parseString(content)
         return [youtrack.Issue(e, self) for e in xml.documentElement.childNodes if e.nodeType == Node.ELEMENT_NODE]
