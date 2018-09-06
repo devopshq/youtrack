@@ -733,9 +733,9 @@ class Connection(object):
             params['wikifyDescription'] = wikify
         path = '/issue'
         if project_id:
-        path += '/byproject/' + urlquote(project_id)
-        response, content = self._req('GET', path + "?" +
-                                      urllib.parse.urlencode(params))
+            path += '/byproject/' + urlquote(project_id)
+        content = self._req('GET', path + "?" +
+                                      urllib.parse.urlencode(params))[1]
         xml = minidom.parseString(content)
         return [youtrack.Issue(e, self) for e in xml.documentElement.childNodes if e.nodeType == Node.ELEMENT_NODE]
 
