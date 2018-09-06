@@ -733,7 +733,7 @@ class Connection(object):
             params['wikifyDescription'] = wikify
         path = '/issue'
         if project_id:
-        path += '/byproject/' + urlquote(project_id)
+            path += '/byproject/' + urlquote(project_id)
         response, content = self._req('GET', path + "?" +
                                       urllib.parse.urlencode(params))
         xml = minidom.parseString(content)
