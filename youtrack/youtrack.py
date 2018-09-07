@@ -5,8 +5,8 @@ YouTrack 2.0 REST API (python 3 version)
 
 import re
 from xml.dom import Node
-from xml.dom.minidom import Document
 from xml.dom import minidom
+from xml.dom.minidom import Document
 from xml.sax.saxutils import escape
 
 basestring = (str, bytes)

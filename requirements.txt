@@ -1,5 +1,6 @@
 httplib2
 pypandoc
 PyHamcrest
+flake8
 # coverage
 # codacy-coverage

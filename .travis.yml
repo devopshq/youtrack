@@ -1,16 +1,10 @@
 language: python
 python: '3.5'
-addons:
-  apt_packages:
-  - pandoc
-branches:
-  only:
-  - master
-  - develop
 install:
-- pip install -r requirements.txt
+  - pip install -r requirements.txt
 script:
-- printenv
+  - printenv
+  - flake8 .
 deploy:
   provider: pypi
   user: devopshq
@@ -19,4 +13,5 @@ deploy:
   distributions: sdist bdist_wheel
   skip_cleanup: true
   on:
-    all_branches: true
+    branch: master
+
