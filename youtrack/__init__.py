@@ -9,4 +9,4 @@ else:
     else:
         version = '{} build {}'.format('.'.join(version[:3]), version[3])
 
-from youtrack.youtrack import *
+from youtrack.youtrack import *  # noqa

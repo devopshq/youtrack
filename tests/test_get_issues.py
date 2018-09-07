@@ -2,7 +2,8 @@ import os
 import pprint
 
 import pytest
-from hamcrest import *
+from hamcrest import assert_that, is_not, is_, instance_of, greater_than
+
 from youtrack.connection import Connection
 
 
@@ -44,11 +45,11 @@ class TestGetIssues:
         if issues:
             issue = issues[0]
 
-            with pytest.raises(KeyError) as e_info:
-                tmp = issue['wrong_attribute']
+            with pytest.raises(KeyError):
+                tmp = issue['wrong_attribute']  # noqa
 
-            with pytest.raises(AttributeError) as e_info:
-                tmp = issue.wrong_attribute
+            with pytest.raises(AttributeError):
+                tmp = issue.wrong_attribute  # noqa
 
     def test_get_issue_comments(self):
         self.connection = TestGetIssues.connection
