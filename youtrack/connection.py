@@ -17,6 +17,7 @@ import tempfile
 import functools
 import re
 import io
+import base64
 
 
 def urlquote(s):
@@ -74,7 +75,8 @@ class Connection(object):
         if response.status != 200:
             raise youtrack.YouTrackException('/user/login', response, content)
         self.headers = {'Cookie': response['set-cookie'],
-                        'Cache-Control': 'no-cache'}
+                        'Cache-Control': 'no-cache',
+                        'Authorization': 'Basic ' + base64.b64encode(bytes(login + ':' + password, 'utf-8')).decode()}
 
     @relogin_on_401
     def _req(self, method, url, body=None, ignore_status=None, content_type=None, accept_header=None):
