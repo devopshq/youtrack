@@ -4,7 +4,6 @@ install:
   - pip install -r requirements.txt
 script:
   - printenv
-  - flake8 .
 deploy:
   provider: pypi
   user: devopshq
